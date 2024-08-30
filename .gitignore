@@ -1,0 +1,4 @@
+config.json
+API/.venv
+API/venv
+API/__PYCACHE__
