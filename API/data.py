@@ -6,7 +6,7 @@ class Banco:
     @staticmethod
     def iniciar_conexao_banco():
         try:
-            # Supondo que os dados do banco estejam em um arquivo JSON ou sejam carregados de outro lugar
+           
             with open('config.json', 'r') as f:
                 dados_banco = json.load(f)
                 

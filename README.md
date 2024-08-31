@@ -57,5 +57,36 @@ O frontend é composto por um arquivo HTML que utiliza Bootstrap para estilizaç
 2. **Execução:** Inicie o servidor Flask para rodar a aplicação.
 3. **Acesso:** Acesse a aplicação pelo navegador no endereço `http://127.0.0.1:5000`.
 
+___
+
+
+# Configuração do Projeto
+
+Para que o projeto funcione corretamente, é necessário criar um arquivo de configuração chamado config.json na raiz do projeto. Este arquivo deve conter as seguintes configurações:
+
+```json
+{
+    "host": "SEU_HOST",
+    "user": "SEU_USUARIO",
+    "password": "SUA_SENHA",
+    "port": 3306,
+    "database": "SEU_DATABASE",
+    "token": "SEU_TOKEN"
+}
+```
+### Descrição dos Campos
+- host: O endereço do servidor de banco de dados.
+- user: O nome de usuário para acessar o banco de dados.
+- password: A senha para o usuário do banco de dados.
+- port: A porta na qual o banco de dados está escutando. (Geralmente 3306 para MySQL)
+- database: O nome do banco de dados que será utilizado.
+- token: O token de autenticação para acessar a API do Climatempo.
+
+### Obtendo o Token
+O token pode ser obtido acessando o [Climatempo Advisor](https://advisor.climatempo.com.br/home/#!/tokens) e seguindo as instruções para gerar um novo token de API.
+
+## Observações
+Segurança: Certifique-se de manter o arquivo config.json fora do controle de versão para proteger informações sensíveis. Adicione-o ao .gitignore se ainda não estiver lá.
+Validação: Verifique se as credenciais e o token estão corretos para garantir a comunicação adequada com o banco de dados e a API.
 
 

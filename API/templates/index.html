@@ -18,8 +18,7 @@
     <div class="container mt-5">
         <section>
             <div class="text-center mb-4">
-                <img src="{{ url_for('static', filename='imagens/logo.png') }}" class="rounded mx-auto d-block"
-                    style="width: 18rem;">
+                <img src="/previsao/static/imagens/logo.png" class="rounded mx-auto d-block" style="width: 18rem;">
             </div>
             <div class="card shadow-sm">
                 <div class="card-body">
@@ -45,7 +44,6 @@
                 </div>
             </div>
 
-            <!-- Tabela Clima Atual -->
             <div class="col-12 mt-4">
                 <div class="table-responsive">
                     <table class="table">
@@ -101,7 +99,7 @@
 
     function buscarCidades(estado) {
         $.ajax({
-            url: `http://127.0.0.1:5000/cidades/` + estado
+            url: `/previsao/cidades/` + estado
         }).done(function (ret) {
             $('#cidade')
                 .empty()
@@ -135,14 +133,14 @@
         }
         let idCidade = cidade.val();
         $.ajax({
-            url: `http://127.0.0.1:5000/weather/` + idCidade
+            url: `/previsao/weather/` + idCidade
         }).done(function (ret) {
             console.log(ret)
             $('#tabelaClima')
                 .empty()
                 .append(
                     $('<tr>').append(
-                        $('<td>').html('<img src="./static/imagens/' + ret.data.icon + '.png">'),
+                        $('<td>').html('<img src="/previsao/static/imagens/' + ret.data.icon + '.png">'),
                         $('<td>').text(convertDateISOToDMA(ret.data.date)).addClass("align-content-center"),
                         $('<td>').text(ret.data.condition).addClass("align-content-center"),
                         $('<td>').text(ret.data.humidity + "%").addClass("align-content-center"),
@@ -169,7 +167,7 @@
         }
         let idCidade = cidade.val();
         $.ajax({
-            url: `http://127.0.0.1:5000/weather15days/` + idCidade
+            url: `/previsao/weather15days/` + idCidade
         }).done(function (ret) {
             console.log(ret)
             $('#tabelaClima15Dias')
@@ -192,7 +190,7 @@
                                         .append(
                                             $('<img>')
                                                 .addClass("img-fluid")
-                                                .attr('src', './static/imagens/' + dia.text_icon.icon.dawn + '.png')
+                                                .attr('src', '/previsao/static/imagens/' + dia.text_icon.icon.dawn + '.png')
                                         )
                                 )
                         ),
@@ -208,7 +206,7 @@
                                         .append(
                                             $('<img>')
                                                 .addClass("img-fluid")
-                                                .attr('src', './static/imagens/' + dia.text_icon.icon.morning + '.png')
+                                                .attr('src', '/previsao/static/imagens/' + dia.text_icon.icon.morning + '.png')
                                         )
                                 )
                         ),
@@ -224,7 +222,7 @@
                                         .append(
                                             $('<img>')
                                                 .addClass("img-fluid")
-                                                .attr('src', './static/imagens/' + dia.text_icon.icon.afternoon + '.png')
+                                                .attr('src', '/previsao/static/imagens/' + dia.text_icon.icon.afternoon + '.png')
                                         )
                                 )
                         ),
@@ -241,7 +239,7 @@
                                         .append(
                                             $('<img>')
                                                 .addClass("img-fluid")
-                                                .attr('src', './static/imagens/' + dia.text_icon.icon.night + '.png')
+                                                .attr('src', '/previsao/static/imagens/' + dia.text_icon.icon.night + '.png')
                                         )
                                 )
                         )
