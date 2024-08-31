@@ -89,4 +89,7 @@ O token pode ser obtido acessando o [Climatempo Advisor](https://advisor.climate
 Segurança: Certifique-se de manter o arquivo config.json fora do controle de versão para proteger informações sensíveis. Adicione-o ao .gitignore se ainda não estiver lá.
 Validação: Verifique se as credenciais e o token estão corretos para garantir a comunicação adequada com o banco de dados e a API.
 
+# Imagem do projeto
+
+![image](https://github.com/user-attachments/assets/8d6602b3-423c-4dd4-8792-e4a0177f9aa8)
 
