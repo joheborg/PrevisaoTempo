@@ -26,6 +26,7 @@
                         <div class="col-sm-12 col-md-5">
                             <label for="estado">Estado</label>
                             <select class="form-select" id="estado">
+                                <option value=""></option>
                                 {% for estado in estados %}
                                 <option value="{{estado['sigla']}}">{{ estado["nome"] }}</option>
                                 {% endfor %}
@@ -63,7 +64,6 @@
                 </div>
             </div>
 
-            <!-- Tabela Clima 15 Dias -->
             <div class="col-12 mt-4">
                 <div class="table-responsive">
                     <table class="table">
@@ -89,16 +89,19 @@
 <script>
 
     $(document).ready(() => {
+
         $("#estado").on("change", function () {
             estado = $(this).val();
             if (estado != "") {
                 buscarCidades(estado);
             }
-        })
+        });
+
+        buscarDadosLocalStorage();
     })
 
     function buscarCidades(estado) {
-        $.ajax({
+        return $.ajax({
             url: `/previsao/cidades/` + estado
         }).done(function (ret) {
             $('#cidade')
@@ -132,10 +135,11 @@
             return;
         }
         let idCidade = cidade.val();
-        $.ajax({
+        let estado = $('#estado').val();
+        salvarDadosLocalStorage(estado, idCidade)
+        return $.ajax({
             url: `/previsao/weather/` + idCidade
         }).done(function (ret) {
-            console.log(ret)
             $('#tabelaClima')
                 .empty()
                 .append(
@@ -166,10 +170,9 @@
             return;
         }
         let idCidade = cidade.val();
-        $.ajax({
+        return $.ajax({
             url: `/previsao/weather15days/` + idCidade
         }).done(function (ret) {
-            console.log(ret)
             $('#tabelaClima15Dias')
                 .empty()
             ret.data.forEach(dia => {
@@ -250,6 +253,23 @@
         }).fail(function (jqXHR, textStatus, errorThrown) {
             console.error(jqXHR.status);
         });
+    }
+
+    function salvarDadosLocalStorage(estado, cidade) {
+        localStorage.setItem('estado', estado);
+        localStorage.setItem('cidade', cidade);
+    }
+
+    function buscarDadosLocalStorage() {
+        let estado = localStorage.getItem('estado');
+        let cidade = localStorage.getItem('cidade');
+        if (!estado) return;
+        $.when(
+            buscarPrevisao()
+        ).then(
+            () =>
+                $('#cidade').val(cidade)
+        );
     }
 
     function convertDateISOToDMA(date) {
