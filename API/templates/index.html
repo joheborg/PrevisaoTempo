@@ -95,8 +95,6 @@
         });
 
         getLocation()
-
-        // buscarDadosLocalStorage();
     })
     var geo = false;
     var municipio = null;
@@ -312,18 +310,6 @@
     function salvarDadosLocalStorage(estado, cidade) {
         localStorage.setItem('estado', estado);
         localStorage.setItem('cidade', cidade);
-    }
-
-    function buscarDadosLocalStorage() {
-        let estado = localStorage.getItem('estado');
-        let cidade = localStorage.getItem('cidade');
-        if (!estado) return;
-        $.when(
-            buscarPrevisao()
-        ).then(
-            () =>
-                $('#cidade').val(cidade)
-        );
     }
 
     function convertDateISOToDMA(date) {
