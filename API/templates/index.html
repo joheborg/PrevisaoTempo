@@ -4,14 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
-        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-        <link rel="icon" href="/previsao/static/imagens/favicon.ico" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <link rel="icon" href="/previsao/static/imagens/favicon.ico" type="image/x-icon">
     <title>Previsão do Tempo</title>
 </head>
 
@@ -98,8 +94,46 @@
             }
         });
 
+        getLocation()
+
         // buscarDadosLocalStorage();
     })
+    var geo = false;
+    var municipio = null;
+
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition, console.log);
+        }
+    }
+
+    function showPosition(position) {
+        geo = true;
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        buscarCidadeLatLong(latitude, longitude);
+    }
+
+    const DiasSemana = ["Seg.", "Ter.", "Qua.", "Qui.", "Sex.", "Sab.", "Dom.",]
+
+    function buscarCidadeLatLong(lat, long) {
+        return $.ajax({
+            url: `/geo/city/` + lat + ',' + long
+        }).done(function (ret) {
+            municipio = ret;
+            $('#estado').val(ret.uf)
+            buscarCidades(ret.uf);
+        })
+    }
+    function selecionarPorTexto(texto) {
+        const select = document.getElementById('cidade');
+        for (let i = 0; i < select.options.length; i++) {
+            if (select.options[i].text === texto) {
+                select.selectedIndex = i;
+                break;
+            }
+        }
+    }
 
     function buscarCidades(estado) {
         return $.ajax({
@@ -119,10 +153,29 @@
                             .val(cidade.id)
                             .text(cidade.name)
                     );
-            });
+            }
+            );
+            if (geo) {
+
+                $.when(
+                    selecionarPorTexto(municipio.city)
+                )
+                    .then(buscarPrevisao())
+            }
         }).fail(function (jqXHR, textStatus, errorThrown) {
             console.error(jqXHR.status);
         });
+    }
+
+    function VerificarDiaSemana(data) {
+        const d = new Date(data);
+
+        const dNow = new Date();
+        if (data.split('-')[2] == dNow.getDate()) {
+            return "Hoje";
+        }
+        let day = d.getDay()
+        return DiasSemana[day];
     }
 
     function buscarPrevisao() {
@@ -160,13 +213,13 @@
         });
     }
 
-    function buscarPrevisao15Dias() {
+    function buscarPrevisao15Dias(autoCidade = null) {
         let cidade = $('#cidade')
-        if (cidade.length == 0) {
+        if (cidade.length == 0 && autoCidade == null) {
             alert("Selecione o estado");
             return;
         }
-        if (cidade.val() == "" || cidade.val() == null) {
+        if ((cidade.val() == "" || cidade.val() == null) && autoCidade == null) {
             alert("Selecione a cidade");
             return;
         }
@@ -180,7 +233,7 @@
                 $('#tabelaClima15Dias').append(
                     $('<tr>').append(
                         $('<td>')
-                            .text(convertDMAToDM(dia.date_br))
+                            .text(convertDMAToDM(dia.date_br) + " " + VerificarDiaSemana(dia.date))
                             .addClass("align-content-center"),
                         $('<td>').html(
                             $('<div>')
